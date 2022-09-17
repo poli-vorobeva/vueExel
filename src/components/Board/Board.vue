@@ -1,20 +1,39 @@
 <template>
+
     <div>
         <top-row :rows="rows"></top-row>
-        <board-column :rows='rows' v-for="c in columns"></board-column>
+        <board-column
+                :rows='rows'
+                :indx="ind"
+                v-for="(c,ind) in columns"
+                @stopMoveHr='stopMoveHr'
+                @moveHorizontalHr="(coord)=>moveRow(ind,coord)"></board-column>
     </div>
 </template>
 <script>
-    import Column from './Row/Row.vue'
-import TopRow from './TopRow/TopRow.vue'
+	import Column from './Row/Row.vue'
+	import TopRow from './TopRow/TopRow.vue'
+
 	export default {
-		components:{'board-column':Column,'top-row':TopRow},
-    	data() {
+		emits:['moveHorizontalHr'],
+		components: {'board-column': Column, 'top-row': TopRow},
+		data() {
 			return {
 				columns: 5,
-				rows: 5
+				rows: 5,
+				activeRow: null
 			}
+		},
+		methods: {
+			stopMoveHr(c){
+							//this.$refs.hrRef.style.top = `${c}px`
+            },
+			moveRow(ind, c) {
+				console.log(ind)
+				this.$emit('moveHorizontalHr',c)
+	},
 		}
+
 	}
 </script>
 <style scoped>
@@ -25,4 +44,6 @@ import TopRow from './TopRow/TopRow.vue'
         display: flex;
         flex-flow: column nowrap;
     }
+
+
 </style>
