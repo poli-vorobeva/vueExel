@@ -1,49 +1,59 @@
 <template>
-
     <div>
-        <top-row :rows="rows"></top-row>
-        <board-column
+        <top-row
+                @resize-cell-x="resizeCellX"
+                @hide-vertical="hideVertical"
+                @move-vertical="moveVertical"
+                :rows="rows"></top-row>
+        <board-row
                 :rows='rows'
                 :indx="ind"
+                :resizedIndex="this.resizedIndex"
+                :resizedWidth="this.rowWidth"
                 v-for="(c,ind) in columns"
-                @stopMoveHr='stopMoveHr'
-                @moveHorizontalHr="(coord)=>moveRow(ind,coord)"></board-column>
+                @moveHorizontalHr="(coord)=>moveRow(ind,coord)"></board-row>
     </div>
 </template>
 <script>
-	import Column from './Row/Row.vue'
+	import Row from './Row/Row.vue'
 	import TopRow from './TopRow/TopRow.vue'
 
 	export default {
-		emits:['moveHorizontalHr'],
-		components: {'board-column': Column, 'top-row': TopRow},
+		emits: ['moveHorizontalHr', 'move-vertical', 'hide-vertical'],
+		components: {'board-row': Row, 'top-row': TopRow},
 		data() {
 			return {
 				columns: 5,
 				rows: 5,
-				activeRow: null
+				activeRow: null,
+				rowWidth: null,
+				resizedIndex: null
 			}
 		},
 		methods: {
-			stopMoveHr(c){
-							//this.$refs.hrRef.style.top = `${c}px`
-            },
+			resizeCellX(width, idx) {
+				this.resizedIndex = idx
+				this.rowWidth = width
+				console.log(this.rowWidth, '--', this.resizedIndex)
+			},
+			hideVertical() {
+				this.$emit('hide-vertical')
+			},
+			moveVertical(positionX) {
+				this.$emit('move-vertical', positionX)
+			},
 			moveRow(ind, c) {
-				console.log(ind)
-				this.$emit('moveHorizontalHr',c)
-	},
+				this.$emit('moveHorizontalHr', c)
+			},
 		}
-
 	}
 </script>
 <style scoped>
     div {
-        height: 300px;
+        height: 500px;
         width: 100vw;
         background-color: rgba(255, 0, 0, 0.29);
         display: flex;
         flex-flow: column nowrap;
     }
-
-
 </style>

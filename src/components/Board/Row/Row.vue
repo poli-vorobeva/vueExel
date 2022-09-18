@@ -3,7 +3,11 @@
         <index-cell
                 v-on:stop-move-line="stopMoveLine"
                 v-on:move-line="moveLine"></index-cell>
-        <cell-controller v-for="r in rows"></cell-controller>
+        <cell-controller
+                :resizedIndex="this.resizedIndex"
+                :resizedWidth="this.resizedWidth"
+                :cell-index="cellIndex"
+                v-for="(r,cellIndex) in rows"></cell-controller>
     </div>
 </template>
 <script>
@@ -17,31 +21,20 @@
 			}
 		},
 		emits: ['moveHorizontalHr'],
-		props: ['rows', 'indx'],
+		props: ['rows', 'indx','resizedIndex','resizedWidth'],
 		components: {'cell-controller': CellController, 'index-cell': IndexCell},
-		mounted() {
-			console.log(this.refName, '^^^^^^', this.$refs[this.refName].getBoundingClientRect().y)
-		},
 		methods: {
 			stopMoveLine(data) {
-
-				console.log(this.$refs)
-              console.log("CurY",data)
 				const y = this.$refs[this.refName].getBoundingClientRect().y
-              console.log("Prev-",y)
 				const newPosition = data - y
-				console.log("STOPPP", this.indx, newPosition)
 				this.$refs[this.refName].style.height = `${newPosition}px`
-				this.$emit('stopMoveHr')
+				//this.$emit('stopMoveHr')
 			},
 			moveLine(data) {
 				const y = this.$refs[this.refName].getBoundingClientRect().y
-
-				console.log('MOYeeeeee', this.indx,y)
 				this.$emit('moveHorizontalHr', data)
 			}
 		},
-		computed: {}
 	}
 </script>
 <style>

@@ -6,21 +6,19 @@
 </template>
 <script>
 	export default {
+		emits:['move-line','stop-move-line'],
 		methods: {
 			listenMove(e) {
-							//console.log("ListenMOVE")
-							this.$emit('move-line', e.pageY)
-              window.addEventListener('mouseup',this.moveUp)
-						},
+				this.$emit('move-line', e.pageY)
+				window.addEventListener('mouseup', this.moveUp)
+			},
 			moveUp(e) {
-			//	console.log("*****UP",e.pageY)
 				window.removeEventListener('mousemove', this.listenMove)
-              window.removeEventListener('mouseup',this.moveUp)
+				window.removeEventListener('mouseup', this.moveUp)
 				this.$emit('stop-move-line', e.pageY)
 			},
 			moveDown(e) {
-			//	console.log("DOWN")
-           	window.addEventListener('mousemove', this.listenMove)
+				window.addEventListener('mousemove', this.listenMove)
 			}
 		}
 	}
