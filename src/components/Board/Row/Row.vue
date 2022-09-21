@@ -4,9 +4,14 @@
                 v-on:stop-move-line="stopMoveLine"
                 v-on:move-line="moveLine"></index-cell>
         <cell-controller
+                :key=this.cellKey(this.indx,cellIndex)
+                @cellClick="clickCell"
                 :resizedIndex="this.resizedIndex"
                 :resizedWidth="this.resizedWidth"
                 :cell-index="cellIndex"
+                :rowIndex="this.indx"
+                :isCurrentActiveCell="cellIndex===this.currentActiveCellColumn
+                    && this.indx===this.currentActiveCellRow"
                 v-for="(r,cellIndex) in rows"></cell-controller>
     </div>
 </template>
@@ -20,10 +25,13 @@
 				refName: 'row' + this.indx
 			}
 		},
-		emits: ['moveHorizontalHr'],
-		props: ['rows', 'indx','resizedIndex','resizedWidth'],
+		emits: ['moveHorizontalHr','cellClick'],
+		props: ['rows', 'indx','resizedIndex','resizedWidth','currentActiveCellColumn','currentActiveCellRow'],
 		components: {'cell-controller': CellController, 'index-cell': IndexCell},
 		methods: {
+			clickCell(cellIndex){
+			this.$emit('cellClick',cellIndex,this.indx)
+            },
 			stopMoveLine(data) {
 				const y = this.$refs[this.refName].getBoundingClientRect().y
 				const newPosition = data - y
@@ -35,6 +43,11 @@
 				this.$emit('moveHorizontalHr', data)
 			}
 		},
+      computed:{
+			cellKey(){
+				return function(row,cell){return `cell${row}${cell}`}
+        }
+      }
 	}
 </script>
 <style>

@@ -6,10 +6,13 @@
                 @move-vertical="moveVertical"
                 :rows="rows"></top-row>
         <board-row
+                @cellClick="cellClick"
                 :rows='rows'
                 :indx="ind"
                 :resizedIndex="this.resizedIndex"
                 :resizedWidth="this.rowWidth"
+                :currentActiveCellRow="this.currentActiveCellRow"
+                :currentActiveCellColumn="this.currentActiveCellColumn"
                 v-for="(c,ind) in columns"
                 @moveHorizontalHr="(coord)=>moveRow(ind,coord)"></board-row>
     </div>
@@ -27,14 +30,20 @@
 				rows: 5,
 				activeRow: null,
 				rowWidth: null,
-				resizedIndex: null
+				resizedIndex: null,
+				currentActiveCellRow: 0,
+				currentActiveCellColumn: 0
 			}
 		},
 		methods: {
+			cellClick(cellIndex, rowIndex) {
+				console.log(cellIndex, rowIndex)
+				this.currentActiveCellRow = rowIndex
+				this.currentActiveCellColumn = cellIndex
+			},
 			resizeCellX(width, idx) {
 				this.resizedIndex = idx
 				this.rowWidth = width
-				console.log(this.rowWidth, '--', this.resizedIndex)
 			},
 			hideVertical() {
 				this.$emit('hide-vertical')
