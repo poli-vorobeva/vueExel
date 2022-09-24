@@ -4,12 +4,15 @@
                 v-on:stop-move-line="stopMoveLine"
                 v-on:move-line="moveLine"></index-cell>
         <cell-controller
+                @onInput="this.onInput"
+                @listenMouseMove="this.listenMouseMove"
                 :key=this.cellKey(this.indx,cellIndex)
                 @cellClick="clickCell"
                 :resizedIndex="this.resizedIndex"
                 :resizedWidth="this.resizedWidth"
                 :cell-index="cellIndex"
                 :rowIndex="this.indx"
+                :dataForSpread="this.onListenMove && this.dataForSpread"
                 :isCurrentActiveCell="cellIndex===this.currentActiveCellColumn
                     && this.indx===this.currentActiveCellRow"
                 v-for="(r,cellIndex) in rows"></cell-controller>
@@ -20,18 +23,33 @@
 	import CellController from './CellController.vue'
 
 	export default {
+		emit: ['onListenMove'],
 		data() {
 			return {
-				refName: 'row' + this.indx
+				refName: 'row' + this.indx,
+				dataForSpread: '',
+              isMultiSelect:false
 			}
 		},
-		emits: ['moveHorizontalHr','cellClick'],
-		props: ['rows', 'indx','resizedIndex','resizedWidth','currentActiveCellColumn','currentActiveCellRow'],
+		emits: ['moveHorizontalHr', 'cellClick','onInput'],
+		props: ['rows', 'indx', 'resizedIndex', 'resizedWidth', 'currentActiveCellColumn',
+			'currentActiveCellRow', 'dataForMultiSelect', 'isMultiSelect'],
 		components: {'cell-controller': CellController, 'index-cell': IndexCell},
+		updated() {
+			if (this.isMultiSelect) {
+
+			}
+		},
 		methods: {
-			clickCell(cellIndex){
-			this.$emit('cellClick',cellIndex,this.indx)
+			onInput(data){
+				this.$emit('onInput',data)
             },
+			listenMouseMove(data) {
+				this.$emit('onListenMove', data)
+			},
+			clickCell(cellIndex) {
+				this.$emit('cellClick', cellIndex, this.indx)
+			},
 			stopMoveLine(data) {
 				const y = this.$refs[this.refName].getBoundingClientRect().y
 				const newPosition = data - y
@@ -43,11 +61,11 @@
 				this.$emit('moveHorizontalHr', data)
 			}
 		},
-      computed:{
-			cellKey(){
-				return function(row,cell){return `cell${row}${cell}`}
-        }
-      }
+		computed: {
+			cellKey() {
+				return function (row, cell) {return `cell${row}${cell}`}
+			}
+		}
 	}
 </script>
 <style>

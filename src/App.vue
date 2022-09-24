@@ -40,7 +40,10 @@
 
 </script>
 <style>
-
+*{
+    font-family: 'Albert Sans', sans-serif;
+    font-family: 'Poppins', sans-serif;
+}
     body {
         margin: 0;
         padding: 0;

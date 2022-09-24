@@ -1,14 +1,19 @@
 <template>
     <div>
+        <div class="inputData">{{this.inputData}}</div>
         <top-row
                 @resize-cell-x="resizeCellX"
                 @hide-vertical="hideVertical"
                 @move-vertical="moveVertical"
                 :rows="rows"></top-row>
         <board-row
+                @onListenMove="this.onListenMove"
                 @cellClick="cellClick"
                 :rows='rows'
                 :indx="ind"
+                @onInput="(data)=>this.inputData=data"
+                :dataForMultiSelect="this.dataForMultiSelect"
+                :isMultiSelect="this.isMultiSelect"
                 :resizedIndex="this.resizedIndex"
                 :resizedWidth="this.rowWidth"
                 :currentActiveCellRow="this.currentActiveCellRow"
@@ -28,16 +33,23 @@
 			return {
 				columns: 5,
 				rows: 5,
+              inputData:'',
 				activeRow: null,
 				rowWidth: null,
 				resizedIndex: null,
 				currentActiveCellRow: 0,
-				currentActiveCellColumn: 0
+				currentActiveCellColumn: 0,
+              dataForMultiSelect:'',
+              isMultiSelect:false
 			}
 		},
 		methods: {
+			onListenMove(data){
+				this.dataForMultiSelect = data
+              this.isMultiSelect=true
+            },
 			cellClick(cellIndex, rowIndex) {
-				console.log(cellIndex, rowIndex)
+				//console.log(cellIndex, rowIndex)
 				this.currentActiveCellRow = rowIndex
 				this.currentActiveCellColumn = cellIndex
 			},
@@ -64,5 +76,8 @@
         background-color: rgba(255, 0, 0, 0.29);
         display: flex;
         flex-flow: column nowrap;
+    }
+    .inputData{
+        height: 30px;
     }
 </style>
