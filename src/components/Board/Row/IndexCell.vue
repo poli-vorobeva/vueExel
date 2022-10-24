@@ -1,12 +1,18 @@
 <template>
     <div class="rowIndex">
-        <div class="rowIndexContent">indx</div>
-        <div @mousedown="moveDown" class="resizeSubDivBottom"></div>
+        <div class="rowIndexContent">
+            <slot></slot>
+        </div>
+<!--        <div @mousedown="moveDown" class="resizeSubDivBottom"></div>-->
     </div>
 </template>
 <script>
 	export default {
-		emits:['move-line','stop-move-line'],
+
+      setup(){
+
+      },
+		//emits:['move-line','stop-move-line'],
 		methods: {
 			listenMove(e) {
 				this.$emit('move-line', e.pageY)

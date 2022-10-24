@@ -1,10 +1,10 @@
 <template>
-    <vertical-hr :xPosition="this.xHrCoordinates"></vertical-hr>
-    <horizontal-hr :yPosition="this.yHrCoordinates"></horizontal-hr>
+    <vertical-hr :xPosition="xHrCoordinates"></vertical-hr>
+    <horizontal-hr :yPosition="yHrCoordinates"></horizontal-hr>
     <app-header></app-header>
     <tool-bar></tool-bar>
     <app-board
-            @hide-vertical="this.xHrCoordinates=0"
+            @hide-vertical="xHrCoordinates=0"
             @move-vertical="moveVertical"
             @moveHorizontalHr="moveHorizontalHr"
     ></app-board>
@@ -15,35 +15,38 @@
 	import Board from './components/Board/Board.vue'
 	import HorizontalHr from "./components/HorizontalHr.vue";
 	import VerticalHr from './components/VerticalHr.vue'
+	import {ref} from 'vue'
 
 	export default {
-		data() {
+		setup() {
+			const yHrCoordinates = ref(0)
+			const xHrCoordinates = ref(0)
+			const moveHorizontalHr = (yCoordinate) => {
+				yHrCoordinates.value = yCoordinate
+			}
+			const moveVertical = (positionX) => {
+				xHrCoordinates.value = positionX
+			}
 			return {
-				yHrCoordinates: 0,
-				xHrCoordinates: 0
+				yHrCoordinates, xHrCoordinates,
+				moveHorizontalHr, moveVertical
 			}
 		},
 		components: {
 			'app-header': Header, 'tool-bar': ToolBar,
 			'app-board': Board, 'horizontal-hr': HorizontalHr,
 			'vertical-hr': VerticalHr
-		},
-		methods: {
-			moveHorizontalHr(yCoordinate) {
-				this.yHrCoordinates = yCoordinate
-			},
-			moveVertical(positionX) {
-				this.xHrCoordinates = positionX
-			}
 		}
 	}
 
 </script>
 <style>
-*{
-    font-family: 'Albert Sans', sans-serif;
-    font-family: 'Poppins', sans-serif;
-}
+    * {
+        font-family: 'Albert Sans', sans-serif;
+        font-family: 'Poppins', sans-serif;
+        box-sizing: border-box;
+    }
+
     body {
         margin: 0;
         padding: 0;

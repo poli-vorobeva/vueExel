@@ -1,72 +1,89 @@
 <template>
     <div>
-        <div class="inputData">{{this.inputData}}</div>
-        <top-row
-                @resize-cell-x="resizeCellX"
-                @hide-vertical="hideVertical"
-                @move-vertical="moveVertical"
-                :rows="rows"></top-row>
+        <div class="inputData">
+            <input
+                    type="text"
+                    :value="valueToInput"
+                    @input="addToActiveCell"
+            /></div>
+        <top-row :columns="columns"></top-row>
         <board-row
-                @onListenMove="this.onListenMove"
-                @cellClick="cellClick"
-                :rows='rows'
-                :indx="ind"
-                @onInput="(data)=>this.inputData=data"
-                :dataForMultiSelect="this.dataForMultiSelect"
-                :isMultiSelect="this.isMultiSelect"
-                :resizedIndex="this.resizedIndex"
-                :resizedWidth="this.rowWidth"
-                :currentActiveCellRow="this.currentActiveCellRow"
-                :currentActiveCellColumn="this.currentActiveCellColumn"
-                v-for="(c,ind) in columns"
-                @moveHorizontalHr="(coord)=>moveRow(ind,coord)"></board-row>
+                :isActive="isActiveRow(row)"
+                :columns='columns'
+                v-for="row in rows"
+                :rowInx="row">
+        </board-row>
     </div>
 </template>
 <script>
 	import Row from './Row/Row.vue'
 	import TopRow from './TopRow/TopRow.vue'
+	import {useStore} from "vuex";
+	import {ref, computed} from 'vue'
 
 	export default {
-		emits: ['moveHorizontalHr', 'move-vertical', 'hide-vertical'],
 		components: {'board-row': Row, 'top-row': TopRow},
-		data() {
-			return {
-				columns: 5,
-				rows: 5,
-              inputData:'',
-				activeRow: null,
-				rowWidth: null,
-				resizedIndex: null,
-				currentActiveCellRow: 0,
-				currentActiveCellColumn: 0,
-              dataForMultiSelect:'',
-              isMultiSelect:false
+		setup() {
+			const store = useStore()
+			const dataCurrentCell = ref('')
+			const {rows, columns} = store.getters.getBoardMatrix
+			const valueToInput = computed(() => {
+				console.log(store.getters.getCurrentCellData,'###')
+				return store.getters.getCurrentCellData
+			})
+			const activeCellIndex = computed(()=>store.getters.getCurrentIndexCell)
+			const isActiveRow = computed(() => {
+				return function (rowInx) {
+					if (+activeCellIndex.value.split('-')[0] === rowInx) {
+						return activeCellIndex.value.split('-')[1]
+					}
+				}
+			})
+			const addToActiveCell = (e) => {
+				store.commit('addValueToActiveCell', e.target.value)
+
 			}
-		},
-		methods: {
-			onListenMove(data){
-				this.dataForMultiSelect = data
-              this.isMultiSelect=true
-            },
-			cellClick(cellIndex, rowIndex) {
-				//console.log(cellIndex, rowIndex)
-				this.currentActiveCellRow = rowIndex
-				this.currentActiveCellColumn = cellIndex
-			},
-			resizeCellX(width, idx) {
-				this.resizedIndex = idx
-				this.rowWidth = width
-			},
-			hideVertical() {
-				this.$emit('hide-vertical')
-			},
-			moveVertical(positionX) {
-				this.$emit('move-vertical', positionX)
-			},
-			moveRow(ind, c) {
-				this.$emit('moveHorizontalHr', c)
-			},
+			// const onInputToCell=(e)=>{
+			// 	store.commit('dataFromInput',
+			//                    {
+			//                    	content: e.target.value
+			//                    })
+			//}
+			return {rows, columns, valueToInput, dataCurrentCell, isActiveRow, addToActiveCell}
 		}
+		// emits: ['moveHorizontalHr', 'move-vertical', 'hide-vertical'],
+		// setup(_, {emit}) {
+		// 	const store = useStore()
+		// 	const {rows, columns} = store.getters.getBoardMatrix
+		// 	const inputData = ref('')
+		// 	const activeRow = ref(null)
+		// 	const rowWidth = ref(null)
+		// 	const resizedIndex = ref(null)
+		// 	const currentActiveCellRow = ref(0)
+		// 	const currentActiveCellColumn = ref(0)
+		// 	const dataForMultiSelect = ref('')
+		// 	const isMultiSelect = ref(false)
+		// 	const onListenMove = (data) => {
+		// 		dataForMultiSelect.value = data
+		// 		isMultiSelect.value = true
+		// 	}
+		// 	const cellClick = (cellIndex, rowIndex) => {
+		// 		currentActiveCellRow.value = rowIndex
+		// 		currentActiveCellColumn.value = cellIndex
+		// 	}
+		// 	const resizeCellX = (width, idx) => {
+		// 		resizedIndex.value = idx
+		// 		rowWidth.value = width
+		// 	}
+		// 	const hideVertical = () => emit('hide-vertical')
+		// 	const moveVertical = (positionX) => emit('move-vertical', positionX)
+		// 	const moveRow = (ind, c) => emit('moveHorizontalHr', c)
+		// 	return {
+		// 		columns,rows, inputData, activeRow,
+		// 		dataForMultiSelect, isMultiSelect, resizedIndex, rowWidth, currentActiveCellColumn, currentActiveCellRow,
+		// 		onListenMove, cellClick, resizeCellX, hideVertical, moveVertical, moveRow
+		// 	}
+		// },
 	}
 </script>
 <style scoped>
@@ -77,7 +94,8 @@
         display: flex;
         flex-flow: column nowrap;
     }
-    .inputData{
+
+    .inputData {
         height: 30px;
     }
 </style>
