@@ -1,11 +1,12 @@
 <template>
     <div>
-        <div class="inputData">
+        <div class="inputData" >
             <input
                     type="text"
-                    :value="valueToInput"
+                    :value="inputValue"
                     @input="addToActiveCell"
-            /></div>
+            />
+        </div>
         <top-row :columns="columns"></top-row>
         <board-row
                 :isActive="isActiveRow(row)"
@@ -27,7 +28,7 @@
 			const store = useStore()
 			const dataCurrentCell = ref('')
 			const {rows, columns} = store.getters.getBoardMatrix
-			const valueToInput = computed(() => {
+			const inputValue = computed(() => {
 				console.log(store.getters.getCurrentCellData,'###')
 				return store.getters.getCurrentCellData
 			})
@@ -49,7 +50,7 @@
 			//                    	content: e.target.value
 			//                    })
 			//}
-			return {rows, columns, valueToInput, dataCurrentCell, isActiveRow, addToActiveCell}
+			return {rows, columns, inputValue, dataCurrentCell, isActiveRow, addToActiveCell}
 		}
 		// emits: ['moveHorizontalHr', 'move-vertical', 'hide-vertical'],
 		// setup(_, {emit}) {

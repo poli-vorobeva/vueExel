@@ -1,4 +1,4 @@
-import {createStore} from 'vuex'
+import {createStore,createLogger} from 'vuex'
 import resize from './resize/resize.module'
 import cellData from './cellsData/cellsData.module'
 
@@ -12,51 +12,38 @@ type storeType = {
 	currentCellData: string,
 	currentCellIndex: string
 }
-
+const plugins = []
+if (process.env.NODE_ENV === 'development') {
+	plugins.push(createLogger())
+}
 export default createStore({
+	plugins,
 	state() {
 		return {
 			boardMatrix: {
-				columns: 10,
-				rows: 8,
+				columns: 4,
+				rows: 4,
 				itemWidth: `100px`,
 				itemHeight: `30px`
 			},
 			currentCellData: '',
-			currentCellIndex: ''
+			currentCellIndex: '1-1'
 		}
 	},
 	mutations: {
-		newActiveCell(state, index) {
+		onActiveCell(state, index) {
+			if(state.currentCellIndex===index)return
 			state.currentCellIndex = index
+			state.currentCellData=this.getters['cellData/getCellData'](index)
 		},
 		addValueToActiveCell(state,value){
 			state.currentCellData=value
-			this.commit('cellData/reWriteCell',{index:state.currentCellIndex,content:state.currentCellData})
-
 		},
-		resetCell(state) {
-			state.currentCellData = ''
-			state.currentCellIndex = ''
-		},
-		addCellData(state, payload: { content: string, index: string }) {
-			state.currentCellData = payload.content
-			state.currentCellIndex = payload.index
-		},
-		dataFromInput(state, payload: { content: string }) {
-			state.currentCellData = payload.content
-		}
 	},
 	getters: {
-		getBoardMatrix(state: storeType) {
-			return state.boardMatrix
-		},
-		getCurrentIndexCell(store: storeType) {
-			return store.currentCellIndex
-		},
-		getCurrentCellData(state: storeType) {
-			return state.currentCellData
-		}
+		getBoardMatrix:(state: storeType)=>state.boardMatrix,
+		getCurrentIndexCell:(state: storeType)=> state.currentCellIndex,
+		getCurrentCellData:(state: storeType)=> state.currentCellData
 	},
 	modules: {resize, cellData}
 })

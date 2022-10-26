@@ -9,10 +9,10 @@
                    @input="onInput"
                    :style="{width: cellWidth}"
                    type="text"
-                   @change="onChangedInput"
-                   @blur="onChangedInput"
+                   @change="onChange"
+                   :value="inputValue"
             />
-            <span v-else>{{cellData}}</span>
+            <span v-else>{{inputValue}}</span>
         </div>
     </div>
 </template>
@@ -27,29 +27,36 @@
 			const cellIndex = `${rowIndex}-${colIndex}`
 			const defaultCellWidth = store.getters.getBoardMatrix.itemWidth
 			const cellWidth = ref(defaultCellWidth)
-			const cellData = computed(() => {
-				if (isActiveCell) {
-					console.log(cellIndex)
+			const inputValue = computed(() => {
+				const activeCell = store.getters.getCurrentIndexCell
+				if (activeCell == cellIndex) {
 					return store.getters.getCurrentCellData
 				}
 				else {
 					console.log(store.getters['cellData/getCellData'](cellIndex))
 					return store.getters['cellData/getCellData'](cellIndex)
 				}
-			})
 
+			})
+			// const cellData = computed(() => {
+			// 	const activeCell = ref(store.getters.getCurrentIndexCell)
+			// 	//console.log(activeCell.value, 'activeCellIndex')
+			//
+			// 	if (isActiveCell) {
+			// 		return store.getters.getCurrentCellData
+			// 	}
+			// 	else {
+			// 		//console.log(store.getters['cellData/getCellData'](cellIndex))
+			// 		return store.getters['cellData/getCellData'](cellIndex)
+			// 	}
+			// })
 			const isFocus = ref(false)
 			const onFocus = () => {
-				store.commit('newActiveCell', cellIndex)
+				store.commit('onActiveCell', cellIndex)
 				isFocus.value = true
 			}
 			const onInput = (e) => {
-				store.commit('addCellData', {
-					index: cellIndex,
-					content: e.target.value
-				})
-
-              store.commit('addValueToActiveCell',e.target.value)
+				store.commit('addValueToActiveCell', e.target.value)
 				if (e.target.value.length > 10) {
 					cellWidth.value = parseInt(cellWidth.value, 10) + 10 + 'px'
 				}
@@ -57,21 +64,15 @@
 					cellWidth.value = defaultCellWidth
 				}
 			}
-			const onChangedInput = (e) => {
-				store.commit(
-					'cellData/reWriteCell',
-					{
-						index: cellIndex,
-						content: e.target.value
-					}
-				)
-
-				isFocus.value = false
+			const onChange = (e) => {
+				console.log('onChange')
+				store.commit('cellData/reWriteCell',
+                             {index: cellIndex, content: inputValue.value})
 			}
 
 			return {
-				cellWidth, defaultCellWidth, isFocus, cellData,
-				onInput, onFocus, onChangedInput
+				cellWidth, defaultCellWidth, isFocus, inputValue,
+				onInput, onFocus, onChange
 			}
 		}
 	}

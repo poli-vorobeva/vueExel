@@ -53,3 +53,45 @@
         box-sizing: border-box;
     }
 </style>
+
+<!--<template>-->
+<!--    <div class="blue"></div>-->
+<!--    <div class="red">-->
+<!--        <input type="text" ref="input1" :value="v" @input="inputF"/>-->
+
+<!--       <teleport to=".blue">-->
+<!--           <input type="text" ref="input2" :value="v"  @input="inputF"/>-->
+<!--       </teleport>-->
+
+<!--    </div>-->
+<!--</template>-->
+
+<!--<script>-->
+<!--	import {ref, computed} from 'vue'-->
+
+<!--	export default {-->
+<!--		setup() {-->
+<!--			const v = ref('')-->
+<!--          -->
+<!--          const inputF=(e)=>{-->
+<!--				v.value=e.target.value-->
+<!--          }-->
+<!--			return {-->
+<!--				v,inputF-->
+<!--			}-->
+<!--		}-->
+<!--	}-->
+<!--</script>-->
+
+<!--<style scoped>-->
+<!--.red{-->
+<!--    background: indianred;-->
+<!--    height: 100px;-->
+<!--    margin-top: 40px;-->
+<!--}-->
+<!--    .blue{-->
+<!--        background: darkgoldenrod;-->
+<!--        height: 100px;-->
+<!--    }-->
+<!--</style>-->
+
