@@ -34,7 +34,7 @@ export default createStore({
 		onActiveCell(state, index) {
 			if(state.currentCellIndex===index)return
 			state.currentCellIndex = index
-			state.currentCellData=this.getters['cellData/getCellData'](index)
+			state.currentCellData=this.getters['cellData/getCellData'](index).data
 		},
 		addValueToActiveCell(state,value){
 			state.currentCellData=value

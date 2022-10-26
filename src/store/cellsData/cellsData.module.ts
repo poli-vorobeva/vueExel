@@ -1,5 +1,5 @@
 type stateType={
-	data:Map<string,string>
+	data:Map<string,Record<string, string>>
 }
 export default {
 	namespaced: true,
@@ -9,17 +9,25 @@ export default {
 		}
 	},
 	mutations: {
-		reWriteCell(state:stateType,payload:{index:string,content:string}){
+		reWriteCell(state:stateType,payload:
+			{index:string,
+				content:string,
+				expression:string
+			}){
 			if(!payload.content){
 				state.data.delete(payload.index)
 				return
 			}
-			state.data.set(payload.index,payload.content)
+			state.data.set(payload.index,
+				{data:payload.content,formula:payload.expression})
 		}
 	},
 	getters: {
 		getCellData:(state)=>(index)=>{
 			return state.data.has(index) ? state.data.get(index):''
+		},
+		getSet(state){
+			return state.data
 		}
 	}
 }

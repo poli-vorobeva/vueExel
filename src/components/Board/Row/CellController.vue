@@ -19,6 +19,7 @@
 <script>
 	import {useStore} from "vuex";
 	import {ref, computed} from 'vue'
+		import polishNotation from "../../../helpers/polishNotation";
 
 	export default {
 		props: ['colIndex', 'rowIndex', 'isActiveCell'],
@@ -33,8 +34,7 @@
 					return store.getters.getCurrentCellData
 				}
 				else {
-					console.log(store.getters['cellData/getCellData'](cellIndex))
-					return store.getters['cellData/getCellData'](cellIndex)
+					return store.getters['cellData/getCellData'](cellIndex).formula
 				}
 
 			})
@@ -65,9 +65,15 @@
 				}
 			}
 			const onChange = (e) => {
-				console.log('onChange')
+				//console.log('onChange')
+              const expressionData=polishNotation(e.target.value)
+              console.log(e.target.value, '---',expressionData)
 				store.commit('cellData/reWriteCell',
-                             {index: cellIndex, content: inputValue.value})
+                             {index: cellIndex,
+                               content: inputValue.value,
+                             expression:expressionData.toFixed(2)
+                             })
+							console.log(store.getters['cellData/getSet'])
 			}
 
 			return {

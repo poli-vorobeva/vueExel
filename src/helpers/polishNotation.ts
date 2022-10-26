@@ -2,10 +2,10 @@ const prioritets={
 	'(':0,
 	')':1,
 	'^':2,
-	'*':3,
+	'*':4,
 	'/':3,
-	'+':4,
-	'-':4,
+	'+':5,
+	'-':5,
 }
 function getLexems(str){
 	const subAr=[]
@@ -72,6 +72,7 @@ function leftPolishString(str){
 	return output
 }
 export default function polishNotation(str){
+	if(/[a-zA-Zа-яА-Я]/.test(str)) return str
 	const dataForCalc=(leftPolishString(str))
 	let currentIndex=0
 	const actions={
