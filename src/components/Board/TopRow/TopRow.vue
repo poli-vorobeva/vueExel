@@ -1,6 +1,6 @@
 <template>
     <div class="topRow" :style="{height:itemHeight}">
-        <div class="emptyCell">*</div>
+        <div><div class="emptyCell">*</div></div>
         <top-cell
                 :style="{width:itemWidth}"
                 :idx="i"

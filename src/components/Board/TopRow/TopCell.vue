@@ -1,14 +1,17 @@
 <template>
-    <div
-            v-if="idx>0"
-            class="topCell"
-            :style="{width:cellWidth+'px'}">
-        <slot></slot>
+    <div>
         <div
-                @mousedown="moveRight"
-                class="resizeSubDivRight"
-        ></div>
+                v-if="idx>0"
+                class="topCell"
+                :style="{width:cellWidth+'px'}">
+            <slot></slot>
+            <div
+                    @mousedown="moveRight"
+                    class="resizeSubDivRight"
+            ></div>
+        </div>
     </div>
+
 </template>
 <script>
 	export default {

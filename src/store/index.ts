@@ -21,10 +21,10 @@ export default createStore({
 	state() {
 		return {
 			boardMatrix: {
-				columns: 4,
-				rows: 4,
+				columns: 20,
+				rows: 30,
 				itemWidth: `100px`,
-				itemHeight: `30px`
+				itemHeight: `30px`,
 			},
 			currentCellData: '',
 			currentCellIndex: '1-1'
@@ -41,6 +41,9 @@ export default createStore({
 		},
 	},
 	getters: {
+		getBoardWidth:(state:storeType)=>{
+			return state.boardMatrix.columns*parseInt(state.boardMatrix.itemWidth)
+		},
 		getBoardMatrix:(state: storeType)=>state.boardMatrix,
 		getCurrentIndexCell:(state: storeType)=> state.currentCellIndex,
 		getCurrentCellData:(state: storeType)=> state.currentCellData

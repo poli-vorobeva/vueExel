@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="boardWrapper">
         <div class="inputData" >
             <input
                     type="text"
@@ -20,11 +20,12 @@
 	import Row from './Row/Row.vue'
 	import TopRow from './TopRow/TopRow.vue'
 	import {useStore} from "vuex";
-	import {ref, computed} from 'vue'
+	import {ref, computed,onMounted} from 'vue'
 
 	export default {
 		components: {'board-row': Row, 'top-row': TopRow},
 		setup() {
+
 			const store = useStore()
 			const dataCurrentCell = ref('')
 			const {rows, columns} = store.getters.getBoardMatrix
@@ -88,10 +89,8 @@
 	}
 </script>
 <style scoped>
-    div {
-        height: 500px;
+    .boardWrapper {
         width: 100vw;
-        background-color: rgba(255, 0, 0, 0.29);
         display: flex;
         flex-flow: column nowrap;
     }

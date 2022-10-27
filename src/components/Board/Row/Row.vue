@@ -2,9 +2,19 @@
     <div :class="'row'" :style="{height:itemHeight}">
         <div v-for="(c,i) in columns">
 
-            <index-cell :rowIndex="rowInx" :colIndex="i" v-if="i===0">{{rowInx}}</index-cell>
-            <cell-controller :isActiveCell='isActiveCell(i)' :v-model=dataCur :rowIndex="rowInx" :colIndex="i"
-                             v-else></cell-controller>
+            <index-cell
+                    :rowIndex="rowInx"
+                    :colIndex="i"
+                    v-if="i===0"
+            >{{rowInx}}</index-cell>
+            <cell-controller
+                    :isActiveCell='isActiveCell(i)'
+                    :v-model=dataCur
+                    :rowIndex="rowInx"
+                    :colIndex="i"
+                             v-else
+            >
+            </cell-controller>
         </div>
     </div>
 </template>

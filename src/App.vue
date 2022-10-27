@@ -1,13 +1,16 @@
 <template>
     <vertical-hr :xPosition="xHrCoordinates"></vertical-hr>
     <horizontal-hr :yPosition="yHrCoordinates"></horizontal-hr>
-    <app-header></app-header>
-    <tool-bar></tool-bar>
+    <div class="sticky">
+        <app-header></app-header>
+        <tool-bar></tool-bar>
+    </div>
     <app-board
             @hide-vertical="xHrCoordinates=0"
             @move-vertical="moveVertical"
             @moveHorizontalHr="moveHorizontalHr"
     ></app-board>
+    <horizontal-scroll :totalWidth='boardWidth'></horizontal-scroll>
 </template>
 <script>
 	import Header from './components/Header.vue'
@@ -16,27 +19,32 @@
 	import HorizontalHr from "./components/HorizontalHr.vue";
 	import VerticalHr from './components/VerticalHr.vue'
 	import {ref} from 'vue'
+	import HorizontalScroll from './components/UI/horizontalScroll.vue'
+	import {useStore} from "vuex";
 
 	export default {
 		setup() {
+			const store = useStore()
 			const yHrCoordinates = ref(0)
 			const xHrCoordinates = ref(0)
-			const moveHorizontalHr = (yCoordinate) => {
+			const boardWidth = store.getters.getBoardWidth
+      	    const moveHorizontalHr = (yCoordinate) => {
 				yHrCoordinates.value = yCoordinate
 			}
 			const moveVertical = (positionX) => {
 				xHrCoordinates.value = positionX
 			}
 			return {
-				yHrCoordinates, xHrCoordinates,
+				yHrCoordinates, xHrCoordinates, boardWidth,
 				moveHorizontalHr, moveVertical
 			}
 		},
 		components: {
 			'app-header': Header, 'tool-bar': ToolBar,
 			'app-board': Board, 'horizontal-hr': HorizontalHr,
-			'vertical-hr': VerticalHr
-		}
+			'vertical-hr': VerticalHr,
+			'horizontal-scroll': HorizontalScroll
+		},
 	}
 
 </script>
@@ -45,12 +53,18 @@
         font-family: 'Albert Sans', sans-serif;
         font-family: 'Poppins', sans-serif;
         box-sizing: border-box;
+        margin: 0;
+        padding: 0;
     }
 
     body {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
+        overflow: hidden;
+    }
+
+    .sticky {
+        position: sticky;
+        top: 0;
+        left: 0;
     }
 </style>
 
